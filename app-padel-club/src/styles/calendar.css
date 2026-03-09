@@ -1,0 +1,29 @@
+.fc {
+  font-family: system-ui;
+  color: black
+}
+
+.fc-timegrid-slot {
+  height: 60px;
+}
+
+.fc-col-header-cell {
+  background: #f8fafc;
+  font-weight: 600;
+}
+
+.fc-event {
+  border-radius: 10px;
+  padding: 6px;
+  font-size: 14px;
+}
+
+.evento-pagado {
+  background: #60a5fa;
+  border: none;
+}
+
+.evento-pendiente {
+  background: #cbd5f5;
+  border: none;
+}
