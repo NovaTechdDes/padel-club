@@ -1,0 +1,199 @@
+"use client";
+
+import React, { useState } from "react";
+import {
+  X,
+  Calendar as CalendarIcon,
+  Clock,
+  Phone,
+  User,
+  DollarSign,
+} from "lucide-react";
+import { useReservaStore } from "@/src/store";
+
+export const ModalReserva = () => {
+  const { cerrarModal, fecha: fechaStore } = useReservaStore();
+
+  const [formData, setFormData] = useState({
+    nombre: "",
+    telefono: "",
+    fecha: fechaStore.toISOString().split("T")[0],
+    hora_inicio: "08:00",
+    hora_fin: "09:30",
+    precio: "0",
+  });
+
+  const handleChange = (
+    e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>,
+  ) => {
+    const { name, value } = e.target;
+    setFormData((prev) => ({ ...prev, [name]: value }));
+  };
+
+  const handleSubmit = (e: React.FormEvent) => {
+    e.preventDefault();
+    console.log("Reserva data:", formData);
+    // Here we would call the store or API to save the reservation
+    cerrarModal();
+  };
+
+  return (
+    <div className="fixed inset-0 z-50 flex items-end sm:items-center justify-center p-0 sm:p-4">
+      {/* Backdrop */}
+      <div
+        className="absolute inset-0 bg-zinc-900/40 backdrop-blur-sm transition-opacity"
+        onClick={cerrarModal}
+      />
+
+      {/* Modal Container */}
+      <div className="relative w-full max-w-lg bg-white rounded-t-3xl sm:rounded-2xl shadow-2xl transform transition-all animate-in slide-in-from-bottom sm:zoom-in-95 duration-300 overflow-hidden">
+        {/* Header */}
+        <div className="flex items-center justify-between p-6 border-b border-zinc-100 bg-zinc-50/50">
+          <div>
+            <h2 className="text-xl font-bold text-zinc-900 tracking-tight">
+              Nueva Reserva
+            </h2>
+            <p className="text-sm text-zinc-500 font-medium">
+              Completa los detalles del turno
+            </p>
+          </div>
+          <button
+            onClick={cerrarModal}
+            className="p-2 rounded-full hover:bg-zinc-200/50 text-zinc-400 hover:text-zinc-600 transition-colors"
+          >
+            <X className="w-6 h-6" />
+          </button>
+        </div>
+
+        {/* Form */}
+        <form onSubmit={handleSubmit} className="p-6 space-y-5">
+          {/* Cliente Info */}
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+            <div className="space-y-1.5">
+              <label className="text-xs font-bold uppercase tracking-wider text-zinc-500 ml-1">
+                Nombre
+              </label>
+              <div className="relative">
+                <User className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-zinc-400" />
+                <input
+                  type="text"
+                  name="nombre"
+                  placeholder="Ej: Juan Pérez"
+                  value={formData.nombre}
+                  onChange={handleChange}
+                  required
+                  className="w-full pl-10 pr-4 py-3 bg-zinc-50 border border-zinc-200 rounded-xl text-black text-sm focus:outline-none focus:ring-2 focus:ring-zinc-900/5 focus:border-zinc-900 transition-all"
+                />
+              </div>
+            </div>
+            <div className="space-y-1.5">
+              <label className="text-xs font-bold uppercase tracking-wider text-zinc-500 ml-1">
+                Teléfono
+              </label>
+              <div className="relative">
+                <Phone className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-zinc-400" />
+                <input
+                  type="tel"
+                  name="telefono"
+                  placeholder="Ej: 3456123456"
+                  value={formData.telefono}
+                  onChange={handleChange}
+                  required
+                  className="w-full pl-10 pr-4 py-3 text-black bg-zinc-50 border border-zinc-200 rounded-xl text-black text-sm focus:outline-none focus:ring-2 focus:ring-zinc-900/5 focus:border-zinc-900 transition-all"
+                />
+              </div>
+            </div>
+          </div>
+
+          <hr className="border-zinc-100" />
+
+          {/* Fecha y Horario */}
+          <div className="space-y-4">
+            <div className="space-y-1.5">
+              <label className="text-xs font-bold uppercase tracking-wider text-zinc-500 ml-1">
+                Fecha
+              </label>
+              <div className="relative">
+                <CalendarIcon className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-zinc-400" />
+                <input
+                  type="date"
+                  name="fecha"
+                  value={formData.fecha}
+                  onChange={handleChange}
+                  required
+                  className="w-full pl-10 pr-4 py-3 text-black bg-zinc-50 border border-zinc-200 rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-zinc-900/5 focus:border-zinc-900 transition-all"
+                />
+              </div>
+            </div>
+
+            <div className="grid grid-cols-2 gap-4">
+              <div className="space-y-1.5">
+                <label className="text-xs font-bold uppercase tracking-wider text-zinc-500 ml-1">
+                  Inicio
+                </label>
+                <div className="relative">
+                  <Clock className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-zinc-400" />
+                  <input
+                    type="time"
+                    name="hora_inicio"
+                    value={formData.hora_inicio}
+                    onChange={handleChange}
+                    required
+                    className="w-full pl-10 pr-4 py-3 bg-zinc-50 border text-black border-zinc-200 rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-zinc-900/5 focus:border-zinc-900 transition-all"
+                  />
+                </div>
+              </div>
+              <div className="space-y-1.5">
+                <label className="text-xs font-bold uppercase tracking-wider text-zinc-500 ml-1">
+                  Fin
+                </label>
+                <div className="relative">
+                  <Clock className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-zinc-400" />
+                  <input
+                    type="time"
+                    name="hora_fin"
+                    value={formData.hora_fin}
+                    onChange={handleChange}
+                    required
+                    className="w-full pl-10 pr-4 py-3 bg-zinc-50 border text-black border-zinc-200 rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-zinc-900/5 focus:border-zinc-900 transition-all"
+                  />
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <hr className="border-zinc-100" />
+
+          {/* Precio */}
+          <div className="space-y-1.5">
+            <label className="text-xs font-bold uppercase tracking-wider text-zinc-500 ml-1">
+              Precio
+            </label>
+            <div className="relative">
+              <DollarSign className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-emerald-600" />
+              <input
+                type="number"
+                name="precio"
+                placeholder="0"
+                value={formData.precio}
+                onChange={handleChange}
+                required
+                className="w-full pl-10 pr-4 py-3 bg-emerald-50/30 border border-emerald-100 rounded-xl text-sm font-bold text-emerald-700 placeholder:text-emerald-300 focus:outline-none focus:ring-2 focus:ring-emerald-500/10 focus:border-emerald-500 transition-all"
+              />
+            </div>
+          </div>
+
+          {/* Footer / Action */}
+          <div className="pt-2">
+            <button
+              type="submit"
+              className="w-full py-4 bg-zinc-900 text-white rounded-xl font-bold text-sm shadow-xl shadow-zinc-900/10 hover:bg-zinc-800 active:scale-[0.98] transition-all"
+            >
+              Confirmar Reserva
+            </button>
+          </div>
+        </form>
+      </div>
+    </div>
+  );
+};

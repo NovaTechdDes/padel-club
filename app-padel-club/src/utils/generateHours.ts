@@ -1,7 +1,11 @@
+import { horario } from "../data/horas";
+
 export const generateHours = () => {
   const hours = [];
+  const inicio = parseInt(horario.inicio.split(":")[0]);
+  const fin = parseInt(horario.fin.split(":")[0]);
 
-  for (let i = 17; i <= 23; i++) {
+  for (let i = inicio; i <= fin; i++) {
     hours.push(`${i}:00`);
   }
 
