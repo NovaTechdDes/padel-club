@@ -4,7 +4,7 @@ import { canchas } from '@/src/data/canchas';
 import { reservas } from '@/src/data/reservas';
 import { useReservaStore } from '@/src/store';
 import { generateHours } from '@/src/utils/generateHours';
-import { Clock, DollarSign } from 'lucide-react';
+import { Clock } from 'lucide-react';
 import { ModalReserva } from './ModalReserva';
 import { CeldaCancha } from './CeldaCancha';
 

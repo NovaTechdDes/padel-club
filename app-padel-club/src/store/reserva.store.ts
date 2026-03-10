@@ -3,6 +3,7 @@ import { Reserva } from "../interface";
 
 interface ReservaState {
   fecha: Date;
+  setFecha: (fecha: Date) => void;
 
   modal: boolean;
   abrirModal: () => void;
@@ -14,6 +15,7 @@ interface ReservaState {
 
 export const useReservaStore = create<ReservaState>((set) => ({
   fecha: new Date(),
+  setFecha: (fecha) => set({fecha}),
 
   modal: false,
   abrirModal: () => set({ modal: true }),

@@ -8,7 +8,7 @@ interface Props {
   c: Cancha;
   i: number;
   hora: string;
-  reserva: Reserva;
+  reserva?: Reserva;
   abrirModal: () => void;
 }
 

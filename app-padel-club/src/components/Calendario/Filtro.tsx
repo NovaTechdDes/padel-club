@@ -1,20 +1,30 @@
 'use client';
+import { useEffect, useState } from 'react';
 import { format, addDays } from 'date-fns';
 import { es } from 'date-fns/locale';
 import { Swiper, SwiperSlide } from 'swiper/react';
-import 'swiper/css';
-import { Calendar as CalendarIcon, ChevronLeft, ChevronRight } from 'lucide-react';
-import { useEffect, useState } from 'react';
+import type { Swiper as SwiperType } from 'swiper';
+
 import { reservas } from '@/src/data/reservas';
+import { useReservaStore } from '@/src/store';
+import { CeldaDia } from './CeldaDia';
+
+
+import { Calendar as CalendarIcon, ChevronLeft, ChevronRight } from 'lucide-react';
+import 'swiper/css';
+import '@/src/styles/calendar.css'
 
 export default function Filtro() {
   const days = Array.from({ length: 14 }, (_, i) => addDays(new Date(), i));
-
+  const {fecha} = useReservaStore();
+  const [swiper, setSwiper] = useState<SwiperType | null>(null);
   const [mounted, setMounted] = useState(false);
 
   useEffect(() => {
     setMounted(true);
   }, []);
+
+
 
   if (!mounted) return null;
 
@@ -29,10 +39,16 @@ export default function Filtro() {
         </div>
 
         <div className="flex items-center gap-1">
-          <button className="p-1.5 text-zinc-400 hover:text-zinc-900 hover:bg-zinc-200/50 rounded-md transition-colors focus:ring-2 focus:ring-zinc-900/10">
+          <button 
+            onClick={() => swiper?.slidePrev()}
+            className="p-1.5 text-zinc-400 hover:text-zinc-900 hover:bg-zinc-200/50 rounded-md transition-colors focus:ring-2 focus:ring-zinc-900/10 active:scale-95 disabled:opacity-30"
+          >
             <ChevronLeft className="w-5 h-5" />
           </button>
-          <button className="p-1.5 text-zinc-400 hover:text-zinc-900 hover:bg-zinc-200/50 rounded-md transition-colors focus:ring-2 focus:ring-zinc-900/10">
+          <button 
+            onClick={() => swiper?.slideNext()}
+            className="p-1.5 text-zinc-400 hover:text-zinc-900 hover:bg-zinc-200/50 rounded-md transition-colors focus:ring-2 focus:ring-zinc-900/10 active:scale-95 disabled:opacity-30"
+          >
             <ChevronRight className="w-5 h-5" />
           </button>
         </div>
@@ -40,36 +56,22 @@ export default function Filtro() {
 
       <div className="relative px-1 cursor-grab active:cursor-grabbing">
         <Swiper
-          slidesPerView={4.5}
-          spaceBetween={10}
+          onSwiper={setSwiper}
+          slidesPerView={1.5}
+          spaceBetween={16}
           breakpoints={{
-            640: { slidesPerView: 7, spaceBetween: 12 },
+            480: { slidesPerView: 2.5, spaceBetween: 12 },
+            640: { slidesPerView: 4.5, spaceBetween: 12 },
+            768: { slidesPerView: 6.5, spaceBetween: 12 },
+            1024: { slidesPerView: 8.5, spaceBetween: 12 },
           }}
+          className=""
         >
-          {days.map((day, index) => {
-            const isToday = index === 0;
-            return (
-              <SwiperSlide key={index}>
-                <button
-                  className={`
-                    w-full flex justify-between items-center px-4 py-3 rounded-xl border transition-all text-left group
-                    ${
-                      isToday
-                        ? 'bg-zinc-900 border-zinc-900 shadow-md ring-2 ring-zinc-900 ring-offset-2 ring-offset-zinc-50'
-                        : 'bg-white border-zinc-200 hover:border-zinc-300 hover:bg-zinc-50 shadow-sm'
-                    }
-                  `}
-                >
-                  <div className="flex flex-col">
-                    <span className={`text-[10px] font-semibold uppercase tracking-widest mb-0.5 ${isToday ? 'text-zinc-400' : 'text-zinc-500'}`}>{format(day, 'eee', { locale: es })}</span>
-                    <span className={`text-xl font-bold tracking-tight ${isToday ? 'text-white' : 'text-zinc-900'}`}>{format(day, 'd')}</span>
-                  </div>
-                  {/* Indicador de que hay reservas ese dia (mock) */}
-                  {reservas.length > 0 && <div className={`w-1.5 h-1.5 rounded-full ${isToday ? 'bg-emerald-400' : 'bg-zinc-300 group-hover:bg-zinc-400'}`} />}
-                </button>
-              </SwiperSlide>
-            );
-          })}
+          {days.map((day, index) => (
+            <SwiperSlide key={index}>
+              <CeldaDia day={day} reservas={reservas} />
+            </SwiperSlide>
+          ))}
         </Swiper>
       </div>
     </div>
