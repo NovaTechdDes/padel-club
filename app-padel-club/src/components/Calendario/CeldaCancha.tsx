@@ -1,25 +1,38 @@
-import React, { useEffect, useState } from 'react';
+import { useState } from 'react';
 import { Cancha, Reserva } from '@/src/interface';
 import { DollarSign } from 'lucide-react';
 import { getDurationInHours } from '@/src/utils/getDurationInHours';
 import { getHourNow } from '@/src/utils/getHourNow';
+import { useReservaStore } from '@/src/store';
 
 interface Props {
   c: Cancha;
   i: number;
   hora: string;
   reserva?: Reserva;
-  abrirModal: () => void;
+  abrirModal: (hora?: string) => void;
 }
 
 export const CeldaCancha = ({ c, i, hora, reserva, abrirModal }: Props) => {
-  const [horaPasada, setHoraPasada] = useState<boolean>(() => {
+  const { setReservaSeleccionado } = useReservaStore();
+  const [horaPasada] = useState<boolean>(() => {
     if (parseInt(hora) <= getHourNow()) {
       return true;
     } else {
       return false;
     }
   });
+
+  const handleModal = () => {
+    if (!reserva) return null;
+
+    setReservaSeleccionado(reserva);
+    abrirModal();
+  };
+
+  const abrirModalVacio = () => {
+    abrirModal(hora);
+  };
 
   return (
     <div key={c.id} className={`relative h-[90px] p-2 border-b border-dashed border-zinc-100 ${i === 0 ? 'border-r' : ''} ${horaPasada ? 'cursor-not-allowed bg-gray-300' : ''}`}>
@@ -28,7 +41,7 @@ export const CeldaCancha = ({ c, i, hora, reserva, abrirModal }: Props) => {
         <div className="w-full h-full  bg-gray-300  flex flex-col items-center justify-center text-zinc-400 opacity-0 group-hover:opacity-100 transition-opacity cursor-pointer active:scale-[0.98]"></div>
       ) : (
         <div
-          onClick={abrirModal}
+          onClick={abrirModalVacio}
           className="w-full h-full rounded-xl border border-dashed border-zinc-200 bg-zinc-50/50 flex flex-col items-center justify-center text-zinc-400 opacity-0 group-hover:opacity-100 transition-opacity cursor-pointer active:scale-[0.98]"
         >
           <span className="text-[10px] uppercase font-bold tracking-widest mb-0.5">Libre</span>
@@ -39,6 +52,7 @@ export const CeldaCancha = ({ c, i, hora, reserva, abrirModal }: Props) => {
       {/* TOKEN DE RESERVA (Elevation 2) */}
       {reserva && (
         <div
+          onClick={handleModal}
           className="absolute top-2 left-2 right-2 z-10 rounded-xl bg-[#e3f0fa] border-2 border-white shadow-sm flex flex-col p-3 overflow-hidden ring-1 ring-black/5"
           style={{
             height: `calc(${getDurationInHours(reserva.hora_inicio, reserva.hora_fin) * 90}px - 16px)`,
