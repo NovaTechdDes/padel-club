@@ -1,7 +1,7 @@
-import Calendar from "../components/Calendario/Calendario";
-import Filtro from "../components/Calendario/Filtro";
+import Calendar from '../components/Calendario/Calendario';
+import Filtro from '../components/Calendario/Filtro';
 
-import Header from "../components/ui/Header";
+import Header from '../components/ui/Header';
 
 export default function Home() {
   return (

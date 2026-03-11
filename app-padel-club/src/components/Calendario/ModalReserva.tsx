@@ -3,9 +3,11 @@
 import React, { useState } from 'react';
 import { X, Calendar as CalendarIcon, Clock, Phone, User, DollarSign } from 'lucide-react';
 import { useReservaStore } from '@/src/store';
+import { useQueryClient } from '@tanstack/react-query';
 
 export const ModalReserva = () => {
   const { cerrarModal, fecha: fechaStore, reservaSeleccionado, setReservaSeleccionado, hora_fin_seleccionado, hora_inicio_seleccionado } = useReservaStore();
+  const queryClient = useQueryClient();
 
   const [formData, setFormData] = useState({
     nombre_cliente: reservaSeleccionado ? reservaSeleccionado.nombre_cliente : '',
@@ -41,6 +43,10 @@ export const ModalReserva = () => {
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
     // Here we would call the store or API to save the reservation
+    
+    // Invalidad cache de reservas para que se refresque el calendario
+    queryClient.invalidateQueries({ queryKey: ['reservas'] });
+
     limpiarDatos();
     cerrarModal();
   };
