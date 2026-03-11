@@ -8,13 +8,17 @@ import { Clock, Loader2 } from 'lucide-react';
 import { ModalReserva } from './ModalReserva';
 import { CeldaCancha } from './CeldaCancha';
 import { format } from 'date-fns';
+import { useHorarios } from '@/src/hooks/horarios/useHorarios';
 
 export default function Calendar() {
   const { modal, abrirModal, fecha } = useReservaStore();
-  const hours = generateHours();
+  const { data: horario, isLoading } = useHorarios();
+
+  const hours = generateHours(horario ?? { inicio: '08:00', fin: '23:00', id: '' });
 
   // Obtener canchas y reservas con TanStack Query
   const { data: canchasData, isLoading: loadingCanchas } = useCanchas();
+  console.log(canchasData);
   const { data: reservasData, isLoading: loadingReservas } = useReservas(format(fecha, 'dd-MM-yyyy'));
 
   const getReserva = (canchaId: string, hora: string) => {
@@ -31,6 +35,10 @@ export default function Calendar() {
   }
 
   const currentCanchas = canchasData || [];
+
+  if (isLoading) {
+    return null;
+  }
 
   return (
     <div className="bg-white rounded-2xl border border-zinc-200 shadow-sm flex flex-col mt-2">
