@@ -18,8 +18,8 @@ export default function Calendar() {
 
   // Obtener canchas y reservas con TanStack Query
   const { data: canchasData, isLoading: loadingCanchas } = useCanchas();
-  console.log(canchasData);
-  const { data: reservasData, isLoading: loadingReservas } = useReservas(format(fecha, 'dd-MM-yyyy'));
+
+  const { data: reservasData, isLoading: loadingReservas } = useReservas(format(fecha, 'yyyy-MM-dd'));
 
   const getReserva = (canchaId: string, hora: string) => {
     return reservasData?.find((r) => r.cancha_id === canchaId && r.hora_inicio === hora);

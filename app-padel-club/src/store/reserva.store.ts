@@ -1,5 +1,5 @@
 import { create } from 'zustand';
-import { Reserva } from '../interface';
+import { Cancha, Reserva } from '../interface';
 
 interface ReservaState {
   fecha: Date;
@@ -14,6 +14,9 @@ interface ReservaState {
 
   hora_inicio_seleccionado: string;
   hora_fin_seleccionado: string;
+
+  canchaSeleccionada: Cancha | null;
+  setCanchaSeleccionada: (cancha: Cancha) => void;
 }
 
 export const useReservaStore = create<ReservaState>((set) => ({
@@ -39,4 +42,7 @@ export const useReservaStore = create<ReservaState>((set) => ({
 
   hora_inicio_seleccionado: '',
   hora_fin_seleccionado: '',
+
+  canchaSeleccionada: null,
+  setCanchaSeleccionada: (cancha) => set({ canchaSeleccionada: cancha }),
 }));

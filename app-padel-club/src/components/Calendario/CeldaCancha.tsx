@@ -14,7 +14,7 @@ interface Props {
 }
 
 export const CeldaCancha = ({ c, i, hora, reserva, abrirModal }: Props) => {
-  const { setReservaSeleccionado } = useReservaStore();
+  const { setReservaSeleccionado, setCanchaSeleccionada } = useReservaStore();
   const [horaPasada] = useState<boolean>(() => {
     if (parseInt(hora) <= getHourNow()) {
       return true;
@@ -32,6 +32,7 @@ export const CeldaCancha = ({ c, i, hora, reserva, abrirModal }: Props) => {
 
   const abrirModalVacio = () => {
     abrirModal(hora);
+    setCanchaSeleccionada(c);
   };
 
   return (

@@ -9,22 +9,19 @@ import { reservas } from '@/src/data/reservas';
 import { useReservaStore } from '@/src/store';
 import { CeldaDia } from './CeldaDia';
 
-
 import { Calendar as CalendarIcon, ChevronLeft, ChevronRight } from 'lucide-react';
 import 'swiper/css';
-import '@/src/styles/calendar.css'
+import '@/src/styles/calendar.css';
 
 export default function Filtro() {
-  const days = Array.from({ length: 14 }, (_, i) => addDays(new Date(), i));
-  const {fecha} = useReservaStore();
+  const days = Array.from({ length: 31 }, (_, i) => addDays(new Date(), i));
+  const { fecha } = useReservaStore();
   const [swiper, setSwiper] = useState<SwiperType | null>(null);
   const [mounted, setMounted] = useState(false);
 
   useEffect(() => {
     setMounted(true);
   }, []);
-
-
 
   if (!mounted) return null;
 
@@ -35,17 +32,17 @@ export default function Filtro() {
           <div className="p-2 bg-white border border-zinc-200 shadow-sm rounded-lg flex items-center justify-center">
             <CalendarIcon className="w-4 h-4 text-zinc-600" />
           </div>
-          <h2 className="text-[17px] font-semibold text-zinc-900 tracking-tight capitalize">{format(new Date(), "EEEE, d 'de' MMMM", { locale: es })}</h2>
+          <h2 className="text-[17px] font-semibold text-zinc-900 tracking-tight capitalize">{format(fecha, "EEEE, d 'de' MMMM", { locale: es })}</h2>
         </div>
 
         <div className="flex items-center gap-1">
-          <button 
+          <button
             onClick={() => swiper?.slidePrev()}
             className="p-1.5 text-zinc-400 hover:text-zinc-900 hover:bg-zinc-200/50 rounded-md transition-colors focus:ring-2 focus:ring-zinc-900/10 active:scale-95 disabled:opacity-30"
           >
             <ChevronLeft className="w-5 h-5" />
           </button>
-          <button 
+          <button
             onClick={() => swiper?.slideNext()}
             className="p-1.5 text-zinc-400 hover:text-zinc-900 hover:bg-zinc-200/50 rounded-md transition-colors focus:ring-2 focus:ring-zinc-900/10 active:scale-95 disabled:opacity-30"
           >

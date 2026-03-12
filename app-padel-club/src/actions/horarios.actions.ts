@@ -4,7 +4,6 @@ import { supabase } from '../lib/supabase';
 export const getHorarios = async (): Promise<Horario> => {
   try {
     const { data, error } = await supabase.from('horario').select('*').single();
-    console.log(data);
 
     if (error) {
       throw error;

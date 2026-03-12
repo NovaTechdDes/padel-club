@@ -3,19 +3,23 @@
 import React, { useState } from 'react';
 import { X, Calendar as CalendarIcon, Clock, Phone, User, DollarSign } from 'lucide-react';
 import { useReservaStore } from '@/src/store';
-import { useQueryClient } from '@tanstack/react-query';
+import { useMutateReserva } from '@/src/hooks/reservas/useMutateReserva';
+import { mensaje } from '@/src/utils/mensaje';
 
 export const ModalReserva = () => {
-  const { cerrarModal, fecha: fechaStore, reservaSeleccionado, setReservaSeleccionado, hora_fin_seleccionado, hora_inicio_seleccionado } = useReservaStore();
-  const queryClient = useQueryClient();
+  const { cerrarModal, fecha: fechaStore, reservaSeleccionado, setReservaSeleccionado, hora_fin_seleccionado, hora_inicio_seleccionado, canchaSeleccionada } = useReservaStore();
+  const { addReserva, putReserva, deleteReserva } = useMutateReserva();
 
   const [formData, setFormData] = useState({
+    id: reservaSeleccionado ? reservaSeleccionado.id : '',
     nombre_cliente: reservaSeleccionado ? reservaSeleccionado.nombre_cliente : '',
     telefono_cliente: reservaSeleccionado ? reservaSeleccionado.telefono_cliente : '',
-    fecha: reservaSeleccionado ? reservaSeleccionado.fecha.split('-').reverse().join('-') : fechaStore.toISOString().split('T')[0],
+    fecha: reservaSeleccionado ? reservaSeleccionado.fecha.slice(0, 10) : fechaStore.toISOString().split('T')[0],
     hora_inicio: reservaSeleccionado ? reservaSeleccionado?.hora_inicio : hora_inicio_seleccionado,
     hora_fin: reservaSeleccionado ? reservaSeleccionado.hora_fin : hora_fin_seleccionado,
-    precio: reservaSeleccionado ? reservaSeleccionado.precio : '0',
+    precio: reservaSeleccionado ? reservaSeleccionado.precio : canchaSeleccionada?.precio,
+    cancha_id: reservaSeleccionado ? reservaSeleccionado.cancha_id : canchaSeleccionada?.id,
+    activo: true,
   });
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
@@ -26,12 +30,15 @@ export const ModalReserva = () => {
   const limpiarDatos = () => {
     setReservaSeleccionado(null);
     setFormData({
+      id: '',
       nombre_cliente: '',
       telefono_cliente: '',
       fecha: '',
       hora_inicio: '',
       hora_fin: '',
-      precio: '',
+      precio: 0,
+      cancha_id: '',
+      activo: true,
     });
   };
 
@@ -40,15 +47,37 @@ export const ModalReserva = () => {
     cerrarModal();
   };
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleDeleteReserva = () => {
+    if (reservaSeleccionado?.id) {
+      deleteReserva.mutateAsync(reservaSeleccionado.id);
+      limpiarDatos();
+      cerrarModal();
+      mensaje('Reserva eliminada correctamente', 'success');
+    }
+  };
+
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     // Here we would call the store or API to save the reservation
-    
-    // Invalidad cache de reservas para que se refresque el calendario
-    queryClient.invalidateQueries({ queryKey: ['reservas'] });
 
-    limpiarDatos();
-    cerrarModal();
+    if (reservaSeleccionado) {
+      const res = await putReserva.mutateAsync(formData);
+
+      if (res) {
+        limpiarDatos();
+        cerrarModal();
+        mensaje('Reserva modificada correctamente', 'success');
+      }
+      return;
+    }
+
+    const res = await addReserva.mutateAsync(formData);
+
+    if (res) {
+      limpiarDatos();
+      cerrarModal();
+      mensaje('Reserva agregada correctamente', 'success');
+    }
   };
 
   return (
@@ -61,7 +90,9 @@ export const ModalReserva = () => {
         {/* Header */}
         <div className="flex items-center justify-between p-6 border-b border-zinc-100 bg-zinc-50/50">
           <div>
-            <h2 className="text-xl font-bold text-zinc-900 tracking-tight">{reservaSeleccionado ? 'Modificar Reserva' : 'Nueva Reserva'}</h2>
+            <h2 className="text-xl font-bold text-zinc-900 tracking-tight">
+              {reservaSeleccionado ? `Modificar Reserva - ${canchaSeleccionada?.nombre}` : `Nueva Reserva - ${canchaSeleccionada?.nombre}`}
+            </h2>
             <p className="text-sm text-zinc-500 font-medium">Completa los detalles del turno</p>
           </div>
           <button onClick={handleModal} className="p-2 rounded-full hover:bg-zinc-200/50 text-zinc-400 hover:text-zinc-600 transition-colors">
@@ -83,7 +114,6 @@ export const ModalReserva = () => {
                   placeholder="Ej: Juan Pérez"
                   value={formData.nombre_cliente}
                   onChange={handleChange}
-                  required
                   className="w-full pl-10 pr-4 py-3 bg-zinc-50 border border-zinc-200 rounded-xl text-black text-sm focus:outline-none focus:ring-2 focus:ring-zinc-900/5 focus:border-zinc-900 transition-all"
                 />
               </div>
@@ -98,7 +128,6 @@ export const ModalReserva = () => {
                   placeholder="Ej: 3456123456"
                   value={formData.telefono_cliente}
                   onChange={handleChange}
-                  required
                   className="w-full pl-10 pr-4 py-3 text-black bg-zinc-50 border border-zinc-200 rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-zinc-900/5 focus:border-zinc-900 transition-all"
                 />
               </div>
@@ -147,6 +176,7 @@ export const ModalReserva = () => {
                   <input
                     type="time"
                     name="hora_fin"
+                    min={formData.hora_inicio}
                     value={formData.hora_fin}
                     onChange={handleChange}
                     required
@@ -189,10 +219,22 @@ export const ModalReserva = () => {
           </div>
 
           {/* Footer / Action */}
-          <div className="pt-2">
-            <button type="submit" className="w-full py-4 bg-zinc-900 text-white rounded-xl font-bold text-sm shadow-xl shadow-zinc-900/10 hover:bg-zinc-800 active:scale-[0.98] transition-all">
+          <div className={`pt-2 ${reservaSeleccionado ? 'grid grid-cols-2 gap-4' : ''}`}>
+            <button
+              type="submit"
+              className="w-full py-4 bg-zinc-900 text-white rounded-xl font-bold text-sm shadow-xl shadow-zinc-900/10 hover:bg-zinc-800 active:scale-[0.98] transition-all cursor-pointer"
+            >
               {reservaSeleccionado ? 'Modificar Reserva' : 'Confirmar Reserva'}
             </button>
+            {reservaSeleccionado && (
+              <button
+                type="button"
+                onClick={handleDeleteReserva}
+                className="w-full py-4 bg-red-800 text-white rounded-xl font-bold text-sm shadow-xl shadow-zinc-900/10 hover:bg-red-700 active:scale-[0.98] transition-all cursor-pointer"
+              >
+                Eliminar Reserva
+              </button>
+            )}
           </div>
         </form>
       </div>
