@@ -18,6 +18,7 @@
     "react": "19.2.3",
     "react-dom": "19.2.3",
     "react-horizontal-datepicker": "^2.0.3",
+    "sweetalert2": "^11.26.22",
     "swiper": "^12.1.2",
     "zustand": "^5.0.11"
   },

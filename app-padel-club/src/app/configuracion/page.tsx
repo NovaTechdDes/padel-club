@@ -1,6 +1,4 @@
-'use client';
-
-import { Clock, ChevronLeft } from 'lucide-react';
+import { ChevronLeft } from 'lucide-react';
 import Link from 'next/link';
 
 import Header from '../../components/ui/Header';
