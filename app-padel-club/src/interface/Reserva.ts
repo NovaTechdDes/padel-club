@@ -8,4 +8,6 @@ export interface Reserva {
   nombre_cliente: string;
   telefono_cliente?: string;
   precio?: number;
+
+  fijo?: boolean;
 }

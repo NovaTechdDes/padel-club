@@ -20,6 +20,8 @@ export const ModalReserva = () => {
     precio: reservaSeleccionado ? reservaSeleccionado.precio : canchaSeleccionada?.precio,
     cancha_id: reservaSeleccionado ? reservaSeleccionado.cancha_id : canchaSeleccionada?.id,
     activo: true,
+
+    fijo: reservaSeleccionado ? reservaSeleccionado.fijo : false,
   });
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
@@ -39,6 +41,8 @@ export const ModalReserva = () => {
       precio: 0,
       cancha_id: '',
       activo: true,
+
+      fijo: false,
     });
   };
 
@@ -187,13 +191,15 @@ export const ModalReserva = () => {
             </div>
 
             <div className="space-y-1.5 flex gap-5 mt-1">
-              <label htmlFor="turnoFijo" className="text-xs font-bold uppercase tracking-wider text-zinc-500 ml-1">
+              <label htmlFor="fijo" className="text-xs font-bold uppercase tracking-wider text-zinc-500 ml-1">
                 Turno Fijo
               </label>
               <input
                 type="checkbox"
-                name="turnoFijo"
-                id="turnoFijo"
+                name="fijo"
+                id="fijo"
+                checked={formData.fijo}
+                onChange={(e) => setFormData({ ...formData, fijo: e.target.checked })}
                 className="pl-10 scale-200 pr-4 py-3 bg-zinc-50 border text-black border-zinc-200 rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-zinc-900/5 focus:border-zinc-900 transition-all"
               />
             </div>

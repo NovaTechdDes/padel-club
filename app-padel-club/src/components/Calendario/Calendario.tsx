@@ -9,6 +9,7 @@ import { ModalReserva } from './ModalReserva';
 import { CeldaCancha } from './CeldaCancha';
 import { format } from 'date-fns';
 import { useHorarios } from '@/src/hooks/horarios/useHorarios';
+import { useReservasFijas } from '@/src/hooks/reservas_fijas/useReservasFijas';
 
 export default function Calendar() {
   const { modal, abrirModal, fecha } = useReservaStore();
@@ -21,11 +22,18 @@ export default function Calendar() {
 
   const { data: reservasData, isLoading: loadingReservas } = useReservas(format(fecha, 'yyyy-MM-dd'));
 
+  const { data: reservasFijas, isLoading: loadingReservasFijas } = useReservasFijas(format(fecha, 'yyyy-MM-dd'));
+
   const getReserva = (canchaId: string, hora: string) => {
     return reservasData?.find((r) => r.cancha_id === canchaId && r.hora_inicio === hora);
   };
 
-  if (loadingCanchas || loadingReservas) {
+  const getReservaFija = (canchaId: string, hora: string) => {
+    console.log(hora);
+    return reservasFijas?.find((r) => r.cancha_id === canchaId && r.hora_inicio === hora);
+  };
+
+  if (loadingCanchas || loadingReservas || loadingReservasFijas) {
     return (
       <div className="flex flex-col items-center justify-center p-20 bg-white rounded-2xl border border-zinc-200 mt-2 min-h-[400px]">
         <Loader2 className="w-8 h-8 text-zinc-400 animate-spin mb-4" />
@@ -66,7 +74,8 @@ export default function Calendar() {
               </div>
               {currentCanchas.map((c, i) => {
                 const reserva = getReserva(c.id, hora);
-                return <CeldaCancha key={c.id} reserva={reserva} c={c} i={i} hora={hora} abrirModal={abrirModal} />;
+                const reservaFija = getReservaFija(c.id, hora);
+                return <CeldaCancha key={c.id} reserva={reserva} reservaFija={reservaFija} c={c} i={i} hora={hora} abrirModal={abrirModal} />;
               })}
             </div>
           );
