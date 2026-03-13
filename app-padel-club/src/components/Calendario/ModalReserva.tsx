@@ -53,7 +53,8 @@ export const ModalReserva = () => {
 
   const handleDeleteReserva = () => {
     if (reservaSeleccionado?.id) {
-      deleteReserva.mutateAsync(reservaSeleccionado.id);
+      console.log(reservaSeleccionado);
+      deleteReserva.mutateAsync({ id: reservaSeleccionado.id, fijo: reservaSeleccionado.fijo ?? false });
       limpiarDatos();
       cerrarModal();
       mensaje('Reserva eliminada correctamente', 'success');

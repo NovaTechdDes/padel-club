@@ -1,9 +1,10 @@
 import { useState } from 'react';
 import { Cancha, Reserva } from '@/src/interface';
-import { DollarSign, Repeat } from 'lucide-react';
+import { Repeat } from 'lucide-react';
 import { getDurationInHours } from '@/src/utils/getDurationInHours';
 import { getHourNow } from '@/src/utils/getHourNow';
 import { useReservaStore } from '@/src/store';
+import { getDay, parseISO } from 'date-fns';
 
 interface Props {
   c: Cancha;
@@ -15,8 +16,7 @@ interface Props {
 }
 
 export const CeldaCancha = ({ c, i, hora, reserva, reservaFija, abrirModal }: Props) => {
-  console.log(reservaFija);
-  const { setReservaSeleccionado, setCanchaSeleccionada } = useReservaStore();
+  const { setReservaSeleccionado, setCanchaSeleccionada, fecha } = useReservaStore();
   const [horaPasada] = useState<boolean>(() => {
     if (parseInt(hora) <= getHourNow()) {
       return true;
@@ -37,6 +37,9 @@ export const CeldaCancha = ({ c, i, hora, reserva, reservaFija, abrirModal }: Pr
     abrirModal(hora);
     setCanchaSeleccionada(c);
   };
+
+  const fechaSeleccionada = parseISO(fecha.toISOString());
+  const dia = getDay(fechaSeleccionada);
 
   return (
     <div key={c.id} className={`relative h-[90px] p-2 border-b border-dashed border-zinc-100 ${i === 0 ? 'border-r' : ''} ${horaPasada ? 'cursor-not-allowed bg-gray-300' : ''}`}>
@@ -71,7 +74,7 @@ export const CeldaCancha = ({ c, i, hora, reserva, reservaFija, abrirModal }: Pr
         </div>
       )}
 
-      {reservaFija && (
+      {reservaFija && parseInt(reservaFija?.dia_semana || '') === dia && (
         <div
           onClick={handleModal}
           className="absolute top-2 left-2 right-2 z-20 rounded-xl bg-violet-50 border-2 border-white shadow-md flex flex-col p-3 overflow-hidden ring-1 ring-violet-200 group/fija transition-all hover:ring-violet-400"
@@ -80,17 +83,13 @@ export const CeldaCancha = ({ c, i, hora, reserva, reservaFija, abrirModal }: Pr
           }}
         >
           <div className="flex justify-between items-center mb-1.5">
-            <span className="text-[14px] font-bold text-violet-950 tracking-tight leading-none capitalize">
-              {reservaFija.nombre_cliente}
-            </span>
+            <span className="text-[14px] font-bold text-violet-950 tracking-tight leading-none capitalize">{reservaFija.nombre_cliente}</span>
             <div className="bg-violet-100 p-1 rounded-lg">
               <Repeat className="w-3.5 h-3.5 text-violet-600 animate-pulse" />
             </div>
           </div>
           <div className="flex flex-wrap items-center gap-2">
-            <span className="text-[10px] font-extrabold text-violet-700 bg-violet-100/50 px-2 py-0.5 rounded-full border border-violet-200 uppercase tracking-widest shadow-sm">
-              Fija
-            </span>
+            <span className="text-[10px] font-extrabold text-violet-700 bg-violet-100/50 px-2 py-0.5 rounded-full border border-violet-200 uppercase tracking-widest shadow-sm">Fija</span>
             <span className="text-xs font-semibold text-violet-400 flex items-center gap-1">
               <span className="w-1 h-1 rounded-full bg-violet-300"></span>
               {reservaFija.hora_inicio} - {reservaFija.hora_fin}

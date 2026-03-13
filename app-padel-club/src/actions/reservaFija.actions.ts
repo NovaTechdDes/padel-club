@@ -15,23 +15,11 @@ export const startGetReservaFija = async (fecha: string) => {
   }
 };
 
-export const startAddReservaFija = async (reserva: Reserva) => {
+export const startAddReservaFija = async (reserva: Reserva): Promise<boolean> => {
   try {
     const { id, fijo, ...reservaAdd } = reserva;
 
-    const { data: existeReserva, error: errorExisteReserva } = await supabase.rpc('verificar_reserva', {
-      p_hora_inicio: reserva.hora_inicio,
-      p_hora_fin: reserva.hora_fin,
-      p_cancha: reserva.cancha_id,
-      p_fecha: reserva.fecha,
-    });
-
-    if (errorExisteReserva) throw errorExisteReserva;
-
-    if (existeReserva) {
-      mensaje('Ya existe una reserva en ese horario', 'error');
-      return false;
-    }
+    console.log({ id, fijo });
 
     const fecha = parseISO(reserva.fecha);
     const dia = getDay(fecha);
@@ -43,10 +31,31 @@ export const startAddReservaFija = async (reserva: Reserva) => {
 
     if (error) throw error;
 
-    console.log(data);
-
-    return data;
+    return true;
   } catch (error) {
     console.log(error);
+    return false;
+  }
+};
+
+export const startUpdateReservaFija = async (reserva: Reserva) => {
+  try {
+    const { id, fijo, ...reservaUpdate } = reserva;
+
+    const fecha = parseISO(reserva.fecha);
+    const dia = getDay(fecha);
+
+    const { data, error } = await supabase
+      .from('reserva_fija')
+      .update({ dia_semana: dia, ...reservaUpdate })
+      .eq('id', id)
+      .select();
+
+    if (error) throw error;
+
+    return true;
+  } catch (error) {
+    console.log(error);
+    return false;
   }
 };

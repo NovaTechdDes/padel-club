@@ -10,4 +10,5 @@ export interface Reserva {
   precio?: number;
 
   fijo?: boolean;
+  dia_semana?: string;
 }

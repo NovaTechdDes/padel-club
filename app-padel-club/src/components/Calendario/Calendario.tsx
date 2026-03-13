@@ -29,7 +29,6 @@ export default function Calendar() {
   };
 
   const getReservaFija = (canchaId: string, hora: string) => {
-    console.log(hora);
     return reservasFijas?.find((r) => r.cancha_id === canchaId && r.hora_inicio === hora);
   };
 

@@ -9,6 +9,7 @@ export const useMutateReserva = () => {
     mutationFn: (reserva: Reserva) => startAddReserva(reserva),
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['reservas'] });
+      queryClient.invalidateQueries({ queryKey: ['reservas_fijas'] });
     },
   });
 
@@ -16,13 +17,15 @@ export const useMutateReserva = () => {
     mutationFn: startUpdateReserva,
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['reservas'] });
+      queryClient.invalidateQueries({ queryKey: ['reservas_fijas'] });
     },
   });
 
   const deleteReserva = useMutation({
-    mutationFn: startDeleteReserva,
+    mutationFn: (reserva: { id: string; fijo: boolean }) => startDeleteReserva(reserva),
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['reservas'] });
+      queryClient.invalidateQueries({ queryKey: ['reservas_fijas'] });
     },
   });
 
