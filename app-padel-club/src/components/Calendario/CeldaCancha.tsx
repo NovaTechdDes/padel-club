@@ -4,7 +4,7 @@ import { Repeat } from 'lucide-react';
 import { getDurationInHours } from '@/src/utils/getDurationInHours';
 import { getHourNow } from '@/src/utils/getHourNow';
 import { useReservaStore } from '@/src/store';
-import { getDay, parseISO } from 'date-fns';
+import { format, getDay, parseISO } from 'date-fns';
 
 interface Props {
   c: Cancha;
@@ -42,9 +42,9 @@ export const CeldaCancha = ({ c, i, hora, reserva, reservaFija, abrirModal }: Pr
   const dia = getDay(fechaSeleccionada);
 
   return (
-    <div key={c.id} className={`relative h-[90px] p-2 border-b border-dashed border-zinc-100 ${i === 0 ? 'border-r' : ''} ${horaPasada ? 'cursor-not-allowed bg-gray-300' : ''}`}>
+    <div key={c.id} className={`relative h-[90px] p-2 border-b border-dashed border-zinc-100 ${i === 0 ? 'border-r' : ''} ${horaPasada && fecha < new Date() ? 'cursor-not-allowed bg-gray-300' : ''}`}>
       {/* HUECO LIBRE INTACTO (State default) */}
-      {horaPasada ? (
+      {horaPasada && fecha < new Date() ? (
         <div className="w-full h-full  bg-gray-300  flex flex-col items-center justify-center text-zinc-400 opacity-0 group-hover:opacity-100 transition-opacity cursor-pointer active:scale-[0.98]"></div>
       ) : (
         <div
@@ -74,7 +74,7 @@ export const CeldaCancha = ({ c, i, hora, reserva, reservaFija, abrirModal }: Pr
         </div>
       )}
 
-      {reservaFija && parseInt(reservaFija?.dia_semana || '') === dia && (
+      {reservaFija && reservaFija.fecha.slice(0, 10) <= format(fecha, 'yyyy-MM-dd') && parseInt(reservaFija?.dia_semana || '') === dia && (
         <div
           onClick={handleModal}
           className="absolute top-2 left-2 right-2 z-20 rounded-xl bg-violet-50 border-2 border-white shadow-md flex flex-col p-3 overflow-hidden ring-1 ring-violet-200 group/fija transition-all hover:ring-violet-400"

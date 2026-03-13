@@ -1,6 +1,6 @@
 'use client';
 
-import { Settings, LogOut } from 'lucide-react';
+import { Settings } from 'lucide-react';
 import Link from 'next/link';
 import { useAuthStore } from '@/src/store/auth.store';
 
