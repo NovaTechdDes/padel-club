@@ -103,7 +103,7 @@ export const startUpdateReserva = async (reserva: Partial<Reserva>): Promise<boo
     const { fijo, ...reservaUpdate } = reserva;
 
     if (fijo) {
-      const res = await startUpdateReservaFija(reserva);
+      const res = await startUpdateReservaFija(reservaUpdate as Reserva);
       return res;
     }
 

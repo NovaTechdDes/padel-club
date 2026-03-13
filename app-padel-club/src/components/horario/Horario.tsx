@@ -16,6 +16,7 @@ export const Horarios = () => {
   });
 
   useEffect(() => {
+    console.log(data);
     if (data) {
       setHorario(data);
     }

@@ -5,17 +5,18 @@ import { es } from 'date-fns/locale';
 import { Swiper, SwiperSlide } from 'swiper/react';
 import type { Swiper as SwiperType } from 'swiper';
 
-import { reservas } from '@/src/data/reservas';
 import { useReservaStore } from '@/src/store';
 import { CeldaDia } from './CeldaDia';
 
 import { Calendar as CalendarIcon, ChevronLeft, ChevronRight } from 'lucide-react';
 import 'swiper/css';
 import '@/src/styles/calendar.css';
+import { useReservas } from '@/src/hooks';
 
 export default function Filtro() {
   const days = Array.from({ length: 31 }, (_, i) => addDays(new Date(), i));
   const { fecha } = useReservaStore();
+  const { data: reservas } = useReservas(format(fecha, 'yyyy-MM-dd'));
   const [swiper, setSwiper] = useState<SwiperType | null>(null);
   const [mounted, setMounted] = useState(false);
 
@@ -66,7 +67,7 @@ export default function Filtro() {
         >
           {days.map((day, index) => (
             <SwiperSlide key={index}>
-              <CeldaDia day={day} reservas={reservas} />
+              <CeldaDia day={day} reservas={reservas ?? []} />
             </SwiperSlide>
           ))}
         </Swiper>
