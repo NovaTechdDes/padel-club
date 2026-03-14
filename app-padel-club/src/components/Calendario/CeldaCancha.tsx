@@ -74,7 +74,7 @@ export const CeldaCancha = ({ c, i, hora, reserva, reservaFija, abrirModal }: Pr
         </div>
       )}
 
-      {reservaFija && reservaFija.fecha.slice(0, 10) <= format(fecha, 'yyyy-MM-dd') && parseInt(reservaFija?.dia_semana || '') === dia && (
+      {reservaFija && reservaFija.fecha.slice(0, 10) <= format(fecha, 'yyyy-MM-dd') && parseInt(reservaFija?.dia_semana || '0') === dia && (
         <div
           onClick={handleModal}
           className="absolute top-2 left-2 right-2 z-20 rounded-xl bg-violet-50 border-2 border-white shadow-md flex flex-col p-3 overflow-hidden ring-1 ring-violet-200 group/fija transition-all hover:ring-violet-400"

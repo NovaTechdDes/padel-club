@@ -26,6 +26,8 @@ export const startAddReserva = async (reserva: Reserva) => {
       p_id: reserva.id === '' ? null : reserva.id,
     });
 
+    console.log({ data, error });
+
     if (!data) {
       mensaje('La cancha ya se encuentra reservada en ese horario', 'error');
       return false;
