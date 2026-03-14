@@ -19,8 +19,6 @@ export const startAddReservaFija = async (reserva: Reserva): Promise<boolean> =>
   try {
     const { id, fijo, ...reservaAdd } = reserva;
 
-    console.log({ id, fijo });
-
     const fecha = parseISO(reserva.fecha);
     const dia = getDay(fecha);
 

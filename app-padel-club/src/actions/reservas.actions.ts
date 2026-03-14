@@ -23,6 +23,7 @@ export const startAddReserva = async (reserva: Reserva) => {
       p_hora_fin: reserva.hora_fin,
       p_cancha: reserva.cancha_id,
       p_fecha: reserva.fecha,
+      p_id: reserva.id === '' ? null : reserva.id,
     });
 
     if (!data) {
@@ -37,6 +38,7 @@ export const startAddReserva = async (reserva: Reserva) => {
       p_hora_fin: reserva.hora_fin,
       p_cancha: reserva.cancha_id,
       p_fecha: reserva.fecha,
+      p_id: reserva.id === '' ? null : reserva.id,
     });
 
     console.log({ dataFija, errorFija, data, error });
@@ -75,6 +77,7 @@ export const startUpdateReserva = async (reserva: Partial<Reserva>): Promise<boo
       p_hora_fin: reserva.hora_fin,
       p_cancha: reserva.cancha_id,
       p_fecha: reserva.fecha,
+      p_id: reserva.id,
     });
 
     if (!data) {
@@ -89,9 +92,8 @@ export const startUpdateReserva = async (reserva: Partial<Reserva>): Promise<boo
       p_hora_fin: reserva.hora_fin,
       p_cancha: reserva.cancha_id,
       p_fecha: reserva.fecha,
+      p_id: reserva.id,
     });
-    console.log(reserva);
-    console.log({ existeReserva, errorExisteReserva });
 
     if (errorExisteReserva) throw errorExisteReserva;
 
@@ -100,14 +102,13 @@ export const startUpdateReserva = async (reserva: Partial<Reserva>): Promise<boo
       return false;
     }
 
-    const { fijo, ...reservaUpdate } = reserva;
+    const { fijo, dia_semana, ...reservaUpdate } = reserva;
 
     if (fijo) {
       const res = await startUpdateReservaFija(reservaUpdate as Reserva);
       return res;
     }
 
-    console.log(reservaUpdate);
     const { error: errorUpdate } = await supabase.from('reserva').update(reservaUpdate).eq('id', reserva.id);
 
     if (errorUpdate) throw errorUpdate;

@@ -7,7 +7,7 @@ import { generateHours } from '@/src/utils/generateHours';
 import { Clock, Loader2 } from 'lucide-react';
 import { ModalReserva } from './ModalReserva';
 import { CeldaCancha } from './CeldaCancha';
-import { format } from 'date-fns';
+import { format, getDay, parseISO } from 'date-fns';
 import { useHorarios } from '@/src/hooks/horarios/useHorarios';
 import { useReservasFijas } from '@/src/hooks/reservas_fijas/useReservasFijas';
 
@@ -28,8 +28,12 @@ export default function Calendar() {
     return reservasData?.find((r) => r.cancha_id === canchaId && r.hora_inicio === hora);
   };
 
-  const getReservaFija = (canchaId: string, hora: string) => {
-    return reservasFijas?.find((r) => r.cancha_id === canchaId && r.hora_inicio === hora);
+  const getReservaFija = (canchaId: string, hora: string, fecha: string) => {
+    const diaSemana = parseISO(fecha);
+    const dia = getDay(diaSemana);
+
+    const aux = reservasFijas?.find((r) => r.cancha_id === canchaId && r.hora_inicio === hora && r.dia_semana === dia);
+    return aux;
   };
 
   if (loadingCanchas || loadingReservas || loadingReservasFijas) {
@@ -73,7 +77,7 @@ export default function Calendar() {
               </div>
               {currentCanchas.map((c, i) => {
                 const reserva = getReserva(c.id, hora);
-                const reservaFija = getReservaFija(c.id, hora);
+                const reservaFija = getReservaFija(c.id, hora, format(fecha, 'yyyy-MM-dd'));
                 return <CeldaCancha key={c.id} reserva={reserva} reservaFija={reservaFija} c={c} i={i} hora={hora} abrirModal={abrirModal} />;
               })}
             </div>
