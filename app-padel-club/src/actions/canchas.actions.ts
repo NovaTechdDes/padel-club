@@ -3,7 +3,7 @@ import { supabase } from '../lib/supabase';
 
 export const getCanchas = async (): Promise<Cancha[]> => {
   try {
-    const { data, error } = await supabase.from('canchas').select('*').eq('activo', true);
+    const { data, error } = await supabase.from('canchas').select('*').eq('activo', true).order('nombre', { ascending: true });
 
     if (error) {
       throw error;
@@ -33,6 +33,7 @@ export const startAddCancha = async (data: Partial<Cancha>): Promise<boolean> =>
 
 export const startUpdateCancha = async (data: Partial<Cancha>): Promise<boolean> => {
   try {
+    console.log(data);
     const { error } = await supabase.from('canchas').update(data).eq('id', data.id);
 
     if (error) {

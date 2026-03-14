@@ -18,7 +18,7 @@ export const CanchaItem = ({ cancha }: Props) => {
   const handleUpdate = async () => {
     if (cancha.nombre === canchaAux.nombre && cancha.precio === canchaAux.precio) return null;
 
-    const res = await updateCancha.mutateAsync({ id: cancha.id, precio: canchaAux.precio });
+    const res = await updateCancha.mutateAsync({ id: cancha.id, precio: canchaAux.precio, nombre: canchaAux.nombre });
 
     if (res) {
       mensaje('Cancha actualizada Correctamente', 'success');

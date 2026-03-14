@@ -3,6 +3,7 @@
 import { useHorarios } from '@/src/hooks/horarios/useHorarios';
 import { useMutateHorarios } from '@/src/hooks/horarios/useMutateHorarios';
 import { Horario } from '@/src/interface';
+import { mensaje } from '@/src/utils/mensaje';
 import { Clock } from 'lucide-react';
 import { useEffect, useState } from 'react';
 
@@ -33,7 +34,11 @@ export const Horarios = () => {
 
     const res = await putHorario.mutateAsync(horario);
 
-    console.log(res);
+    if (res) {
+      mensaje('Horario actualizado Correctamente', 'success');
+    } else {
+      mensaje('Error al actualizar el horario', 'error');
+    }
   };
 
   return (
