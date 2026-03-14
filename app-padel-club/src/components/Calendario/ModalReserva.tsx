@@ -181,7 +181,6 @@ export const ModalReserva = () => {
                   <input
                     type="time"
                     name="hora_fin"
-                    min={formData.hora_inicio}
                     value={formData.hora_fin}
                     onChange={handleChange}
                     required
