@@ -42,7 +42,7 @@ export const CeldaCancha = ({ c, i, hora, reserva, reservaFija, abrirModal }: Pr
   const dia = getDay(fechaSeleccionada);
 
   return (
-    <div key={c.id} className={`relative h-[90px] p-2 border-b border-dashed border-zinc-100 ${i === 0 ? 'border-r' : ''} ${horaPasada && fecha < new Date() ? 'cursor-not-allowed bg-gray-300' : ''}`}>
+    <div key={c.id} className={`relative h-[70px] p-2 border-b border-zinc-100 ${i === 0 ? 'border-r' : ''} ${horaPasada && fecha < new Date() ? 'cursor-not-allowed bg-gray-300' : ''}`}>
       {/* HUECO LIBRE INTACTO (State default) */}
       {horaPasada && fecha < new Date() ? (
         <div className="w-full h-full  bg-gray-300  flex flex-col items-center justify-center text-zinc-400 opacity-0 group-hover:opacity-100 transition-opacity cursor-pointer active:scale-[0.98]"></div>
@@ -60,15 +60,15 @@ export const CeldaCancha = ({ c, i, hora, reserva, reservaFija, abrirModal }: Pr
       {reserva && (
         <div
           onClick={handleModal}
-          className="absolute top-2 left-2 right-2 z-10 rounded-xl bg-[#e3f0fa] border-2 border-white shadow-sm flex flex-col p-3 overflow-hidden ring-1 ring-black/5"
+          className="absolute top-1.5 left-1.5 right-1.5 z-10 rounded-xl bg-[#e3f0fa] border-2 border-white shadow-sm flex flex-col p-2 overflow-hidden ring-1 ring-black/5"
           style={{
-            height: `calc(${getDurationInHours(reserva.hora_inicio, reserva.hora_fin) * 90}px - 16px)`,
+            height: `calc(${getDurationInHours(reserva.hora_inicio, reserva.hora_fin) * 70}px - 12px)`,
           }}
         >
           <div className="flex justify-between items-start mb-0.5">
-            <span className="text-[15px] font-bold text-[#144b75] tracking-tight leading-none capitalize">{reserva.nombre_cliente}</span>
+            <span className="text-[13px] font-bold text-[#144b75] tracking-tight leading-none capitalize">{reserva.nombre_cliente}</span>
           </div>
-          <span className="text-xs font-semibold text-[#4084bf]">
+          <span className="text-[10px] font-semibold text-[#4084bf]">
             {reserva.hora_inicio} - {reserva.hora_fin}
           </span>
         </div>
@@ -77,20 +77,20 @@ export const CeldaCancha = ({ c, i, hora, reserva, reservaFija, abrirModal }: Pr
       {reservaFija && reservaFija.fecha.slice(0, 10) <= format(fecha, 'yyyy-MM-dd') && parseInt(reservaFija?.dia_semana || '0') === dia && (
         <div
           onClick={handleModal}
-          className="absolute top-2 left-2 right-2 z-20 rounded-xl bg-violet-50 border-2 border-white shadow-md flex flex-col p-3 overflow-hidden ring-1 ring-violet-200 group/fija transition-all hover:ring-violet-400"
+          className="absolute top-1.5 left-1.5 right-1.5 z-20 rounded-xl bg-violet-50 border-2 border-white shadow-md flex flex-col p-2 overflow-hidden ring-1 ring-violet-200 group/fija transition-all hover:ring-violet-400"
           style={{
-            height: `calc(${getDurationInHours(reservaFija.hora_inicio, reservaFija.hora_fin) * 90}px - 16px)`,
+            height: `calc(${getDurationInHours(reservaFija.hora_inicio, reservaFija.hora_fin) * 70}px - 12px)`,
           }}
         >
-          <div className="flex justify-between items-center mb-1.5">
-            <span className="text-[14px] font-bold text-violet-950 tracking-tight leading-none capitalize">{reservaFija.nombre_cliente}</span>
-            <div className="bg-violet-100 p-1 rounded-lg">
-              <Repeat className="w-3.5 h-3.5 text-violet-600 animate-pulse" />
+          <div className="flex justify-between items-center mb-1">
+            <span className="text-[12px] font-bold text-violet-950 tracking-tight leading-none capitalize">{reservaFija.nombre_cliente}</span>
+            <div className="bg-violet-100 p-0.5 rounded-lg">
+              <Repeat className="w-3 h-3 text-violet-600 animate-pulse" />
             </div>
           </div>
-          <div className="flex flex-wrap items-center gap-2">
-            <span className="text-[10px] font-extrabold text-violet-700 bg-violet-100/50 px-2 py-0.5 rounded-full border border-violet-200 uppercase tracking-widest shadow-sm">Fija</span>
-            <span className="text-xs font-semibold text-violet-400 flex items-center gap-1">
+          <div className="flex flex-wrap items-center gap-1.5">
+            <span className="text-[9px] font-extrabold text-violet-700 bg-violet-100/50 px-1.5 py-0.5 rounded-full border border-violet-200 uppercase tracking-widest shadow-sm">Fija</span>
+            <span className="text-[10px] font-semibold text-violet-400 flex items-center gap-1">
               <span className="w-1 h-1 rounded-full bg-violet-300"></span>
               {reservaFija.hora_inicio} - {reservaFija.hora_fin}
             </span>

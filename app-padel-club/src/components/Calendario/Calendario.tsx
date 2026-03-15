@@ -54,7 +54,7 @@ export default function Calendar() {
   return (
     <div className="bg-white rounded-2xl border border-zinc-200 shadow-sm flex flex-col mt-2">
       {/* Header Canchas */}
-      <div className="grid grid-cols-[80px_1fr_1fr] border-b border-zinc-200 bg-zinc-50/80 rounded-t-2xl">
+      <div className="grid grid-cols-[65px_1fr_1fr] border-b border-zinc-200 bg-zinc-50/80 rounded-t-2xl">
         <div className="p-4 border-r border-zinc-200 flex items-center justify-center">
           <Clock className="w-4 h-4 text-zinc-400" />
         </div>
@@ -70,9 +70,9 @@ export default function Calendar() {
         {hours.map((hora, index) => {
           const isLast = index === hours.length - 1;
           return (
-            <div key={hora} className={`grid grid-cols-[80px_1fr_1fr] group ${!isLast ? 'border-b border-zinc-100' : ''}`}>
+            <div key={hora} className={`grid grid-cols-[65px_1fr_1fr] group ${!isLast ? 'border-b border-zinc-100' : ''}`}>
               {/* Eje de tiempo */}
-              <div className="h-[90px] px-2 py-3 border-r border-zinc-200 flex items-start justify-center text-xs font-semibold text-zinc-500 bg-white group-hover:bg-zinc-50/50 transition-colors">
+              <div className="h-[70px] px-2 py-3 border-r border-zinc-200 flex items-start justify-center text-xs font-semibold text-zinc-500 bg-white group-hover:bg-zinc-50/50 transition-colors">
                 {hora}
               </div>
               {currentCanchas.map((c, i) => {

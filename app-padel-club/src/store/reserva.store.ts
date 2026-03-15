@@ -26,7 +26,7 @@ export const useReservaStore = create<ReservaState>((set) => ({
   modal: false,
   abrirModal: (hora?: string) => {
     const startHour = parseInt(hora ?? '0');
-    const endHour = (startHour + 1) % 24; // Reservar 1 hora por defecto (o 1.5, pero con entero es mejor 1 o 2). Voy a ponerle 1.
+    const endHour = (startHour + 2) % 24; // Reservar 1 hora por defecto (o 1.5, pero con entero es mejor 1 o 2). Voy a ponerle 1.
     return set({
       modal: true,
       hora_inicio_seleccionado: hora ? hora.padStart(5, '0') : '',

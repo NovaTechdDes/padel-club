@@ -51,13 +51,17 @@ export const ModalReserva = () => {
     cerrarModal();
   };
 
-  const handleDeleteReserva = () => {
+  const handleDeleteReserva = async () => {
     if (reservaSeleccionado?.id) {
-      console.log(reservaSeleccionado);
-      deleteReserva.mutateAsync({ id: reservaSeleccionado.id, fijo: reservaSeleccionado.fijo ?? false });
-      limpiarDatos();
-      cerrarModal();
-      mensaje('Reserva eliminada correctamente', 'success');
+      const res = await deleteReserva.mutateAsync({ id: reservaSeleccionado.id, fijo: reservaSeleccionado.fijo ?? false });
+
+      if (res) {
+        limpiarDatos();
+        cerrarModal();
+        mensaje('Reserva eliminada correctamente', 'success');
+      } else {
+        mensaje('Error al eliminar la reserva', 'error');
+      }
     }
   };
 
@@ -230,7 +234,7 @@ export const ModalReserva = () => {
               type="submit"
               className="w-full py-4 bg-zinc-900 text-white rounded-xl font-bold text-sm shadow-xl shadow-zinc-900/10 hover:bg-zinc-800 active:scale-[0.98] transition-all cursor-pointer"
             >
-              {reservaSeleccionado ? 'Modificar Reserva' : 'Confirmar Reserva'}
+              {reservaSeleccionado ? (putReserva.isPending ? 'Modificando...' : 'Modificar Reserva') : addReserva.isPending ? 'Agregando...' : 'Confirmar Reserva'}
             </button>
             {reservaSeleccionado && (
               <button
@@ -238,7 +242,7 @@ export const ModalReserva = () => {
                 onClick={handleDeleteReserva}
                 className="w-full py-4 bg-red-800 text-white rounded-xl font-bold text-sm shadow-xl shadow-zinc-900/10 hover:bg-red-700 active:scale-[0.98] transition-all cursor-pointer"
               >
-                Eliminar Reserva
+                {deleteReserva.isPending ? 'Eliminando...' : 'Eliminar Reserva'}
               </button>
             )}
           </div>
