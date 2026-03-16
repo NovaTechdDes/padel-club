@@ -12,10 +12,10 @@ export default function Header() {
     <header className="flex items-center justify-between pb-6 border-b  border-zinc-200 sticky top-0 bg-zinc-50/80 backdrop-blur-md z-12">
       <div className="flex items-center gap-4">
         <Link href="/" className="flex items-center gap-3 group transition-all active:scale-95">
-          <Image src="/public/logo.png" alt="Logo" className="rounded-full" width={40} height={40} />
+          <Image src="/Logo.png" alt="Logo" className="rounded-full" width={40} height={40} />
 
           <div className="flex flex-col justify-center">
-            <Image src="/public/titulo.png" alt="Logo" width={110} height={110} />
+            <Image src="/Titulo.png" alt="Logo" width={110} height={110} />
           </div>
         </Link>
       </div>
