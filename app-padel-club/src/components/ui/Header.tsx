@@ -3,20 +3,19 @@
 import { Settings } from 'lucide-react';
 import Link from 'next/link';
 import { useAuthStore } from '@/src/store/auth.store';
+import Image from 'next/image';
 
 export default function Header() {
   const { user } = useAuthStore();
 
   return (
-    <header className="flex items-center justify-between pb-6 border-b border-zinc-200 sticky top-0 bg-zinc-50/80 backdrop-blur-md z-12">
+    <header className="flex items-center justify-between pb-6 border-b  border-zinc-200 sticky top-0 bg-zinc-50/80 backdrop-blur-md z-12">
       <div className="flex items-center gap-4">
         <Link href="/" className="flex items-center gap-3 group transition-all active:scale-95">
-          <div className="w-10 h-10 bg-zinc-900 rounded-xl flex items-center justify-center shadow-lg group-hover:bg-zinc-800 transition-colors">
-            <span className="text-white font-bold text-sm tracking-tight">SET</span>
-          </div>
+          <Image src="/logo.png" alt="Logo" className="rounded-full" width={40} height={40} />
+
           <div className="flex flex-col justify-center">
-            <h1 className="text-[16px] font-bold text-zinc-900 tracking-tight leading-none mb-1">Padel Club</h1>
-            <p className="text-[11px] text-zinc-500 font-bold leading-none tracking-[0.2em] uppercase">Chajarí</p>
+            <Image src="/titulo.png" alt="Logo" width={110} height={110} />
           </div>
         </Link>
       </div>
