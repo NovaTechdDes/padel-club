@@ -75,6 +75,7 @@ export default function Calendar() {
               <div className="h-[70px] px-2 py-3 border-r border-zinc-200 flex items-start justify-center text-xs font-semibold text-zinc-500 bg-white group-hover:bg-zinc-50/50 transition-colors">
                 {hora}
               </div>
+              {/* Celdas de las canchas */}
               {currentCanchas.map((c, i) => {
                 const reserva = getReserva(c.id, hora);
                 const reservaFija = getReservaFija(c.id, hora, format(fecha, 'yyyy-MM-dd'));

@@ -42,9 +42,12 @@ export const CeldaCancha = ({ c, i, hora, reserva, reservaFija, abrirModal }: Pr
   const dia = getDay(fechaSeleccionada);
 
   return (
-    <div key={c.id} className={`relative h-[70px] p-2 border-b border-zinc-100 ${i === 0 ? 'border-r' : ''} ${horaPasada && fecha < new Date() ? 'cursor-not-allowed bg-gray-300' : ''}`}>
+    <div
+      key={c.id}
+      className={`relative h-[70px] p-2 border-b border-zinc-100 ${i === 0 ? 'border-r' : ''} ${horaPasada && hora !== '00:00' && hora !== '01:00' && fecha < new Date() ? 'cursor-not-allowed bg-gray-300' : ''}`}
+    >
       {/* HUECO LIBRE INTACTO (State default) */}
-      {horaPasada && fecha < new Date() ? (
+      {horaPasada && hora >= '00:00' && hora !== '01:00' && fecha < new Date() ? (
         <div className="w-full h-full  bg-gray-300  flex flex-col items-center justify-center text-zinc-400 opacity-0 group-hover:opacity-100 transition-opacity cursor-pointer active:scale-[0.98]"></div>
       ) : (
         <div

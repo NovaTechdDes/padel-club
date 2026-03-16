@@ -162,7 +162,7 @@ export const ModalReserva = () => {
               </div>
             </div>
 
-            <div className="grid grid-cols-2 gap-4">
+            <div className="grid grid-cols-2 gap-8">
               <div className="space-y-1.5">
                 <label className="text-xs font-bold uppercase tracking-wider text-zinc-500 ml-1">Inicio</label>
                 <div className="relative">
@@ -194,7 +194,7 @@ export const ModalReserva = () => {
               </div>
             </div>
 
-            <div className="space-y-1.5 flex gap-5 mt-1">
+            <div className="space-y-1.5 flex gap-10 mt-1 items-center">
               <label htmlFor="fijo" className="text-xs font-bold uppercase tracking-wider text-zinc-500 ml-1">
                 Turno Fijo
               </label>
@@ -204,7 +204,7 @@ export const ModalReserva = () => {
                 id="fijo"
                 checked={formData.fijo}
                 onChange={(e) => setFormData({ ...formData, fijo: e.target.checked })}
-                className="pl-10 scale-200 pr-4 py-3 bg-zinc-50 border text-black border-zinc-200 rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-zinc-900/5 focus:border-zinc-900 transition-all"
+                className="pl-10 scale-150 pr-4 py-3 bg-zinc-50 border text-black border-zinc-200 rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-zinc-900/5 focus:border-zinc-900 transition-all"
               />
             </div>
           </div>
