@@ -11,11 +11,12 @@ interface Props {
   i: number;
   hora: string;
   reserva?: Reserva;
+  reservaLast?: Reserva;
   reservaFija?: Reserva;
   abrirModal: (hora?: string) => void;
 }
 
-export const CeldaCancha = ({ c, i, hora, reserva, reservaFija, abrirModal }: Props) => {
+export const CeldaCancha = ({ c, i, hora, reserva, reservaLast, reservaFija, abrirModal }: Props) => {
   const { setReservaSeleccionado, setCanchaSeleccionada, fecha } = useReservaStore();
   const [horaPasada] = useState<boolean>(() => {
     if (parseInt(hora) <= getHourNow()) {
@@ -26,9 +27,10 @@ export const CeldaCancha = ({ c, i, hora, reserva, reservaFija, abrirModal }: Pr
   });
 
   const handleModal = () => {
-    const seleccioanda = reserva || reservaFija;
+    const seleccioanda = reserva || reservaFija || reservaLast;
     if (!seleccioanda) return null;
 
+    setCanchaSeleccionada(c);
     setReservaSeleccionado(seleccioanda);
     abrirModal();
   };
@@ -46,7 +48,6 @@ export const CeldaCancha = ({ c, i, hora, reserva, reservaFija, abrirModal }: Pr
       key={c.id}
       className={`relative h-[70px] p-2 border-b border-zinc-100 ${i === 0 ? 'border-r' : ''} ${horaPasada && hora !== '00:00' && hora !== '01:00' && fecha < new Date() ? 'cursor-not-allowed bg-gray-300' : ''}`}
     >
-      {/* HUECO LIBRE INTACTO (State default) */}
       {horaPasada && hora >= '00:00' && hora !== '01:00' && fecha < new Date() ? (
         <div className="w-full h-full  bg-gray-300  flex flex-col items-center justify-center text-zinc-400 opacity-0 group-hover:opacity-100 transition-opacity cursor-pointer active:scale-[0.98]"></div>
       ) : (
@@ -59,7 +60,6 @@ export const CeldaCancha = ({ c, i, hora, reserva, reservaFija, abrirModal }: Pr
         </div>
       )}
 
-      {/* TOKEN DE RESERVA (Elevation 2) */}
       {reserva && (
         <div
           onClick={handleModal}
@@ -73,6 +73,23 @@ export const CeldaCancha = ({ c, i, hora, reserva, reservaFija, abrirModal }: Pr
           </div>
           <span className="text-[10px] font-semibold text-[#4084bf]">
             {reserva.hora_inicio} - {reserva.hora_fin}
+          </span>
+        </div>
+      )}
+
+      {reservaLast && (
+        <div
+          onClick={handleModal}
+          className="absolute top-1.5 left-1.5 mt-8 right-1.5 z-10 rounded-xl bg-[#e3fae8] border-2 border-white shadow-sm flex flex-col p-2 overflow-hidden ring-1 ring-black/5"
+          style={{
+            height: `calc(${getDurationInHours(reservaLast.hora_inicio, reservaLast.hora_fin) * 70}px - 12px)`,
+          }}
+        >
+          <div className="flex justify-between items-start mb-0.5">
+            <span className="text-[13px] font-bold text-[#104b34] tracking-tight leading-none capitalize">{reservaLast.nombre_cliente}</span>
+          </div>
+          <span className="text-[10px] font-semibold text-[#4fbf40]">
+            {reservaLast.hora_inicio} - {reservaLast.hora_fin}
           </span>
         </div>
       )}

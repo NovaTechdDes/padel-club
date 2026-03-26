@@ -28,6 +28,10 @@ export default function Calendar() {
     return reservasData?.find((r) => r.cancha_id === canchaId && r.hora_inicio === hora);
   };
 
+  const getReservaLast = (canchaId: string, hora: string) => {
+    return reservasData?.findLast((r) => r.cancha_id === canchaId && r.hora_inicio.slice(0, 2) === hora.slice(0, 2) && hora !== r.hora_inicio);
+  };
+
   const getReservaFija = (canchaId: string, hora: string, fecha: string) => {
     const diaSemana = parseISO(fecha);
     const dia = getDay(diaSemana);
@@ -78,8 +82,9 @@ export default function Calendar() {
               {/* Celdas de las canchas */}
               {currentCanchas.map((c, i) => {
                 const reserva = getReserva(c.id, hora);
+                const reservaLast = getReservaLast(c.id, hora);
                 const reservaFija = getReservaFija(c.id, hora, format(fecha, 'yyyy-MM-dd'));
-                return <CeldaCancha key={c.id} reserva={reserva} reservaFija={reservaFija} c={c} i={i} hora={hora} abrirModal={abrirModal} />;
+                return <CeldaCancha key={c.id} reserva={reserva} reservaLast={reservaLast} reservaFija={reservaFija} c={c} i={i} hora={hora} abrirModal={abrirModal} />;
               })}
             </div>
           );
