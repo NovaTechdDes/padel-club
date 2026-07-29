@@ -1,24 +1,28 @@
-"use client";
+'use client';
 
-import React, { useEffect, useState } from "react";
-import { supabase } from "@/src/lib/supabase";
-import { useRouter, usePathname } from "next/navigation";
-import { useAuthStore } from "@/src/store/auth.store";
-import { Loader2 } from "lucide-react";
+import React, { useEffect, useState } from 'react';
+import { supabase } from '@/src/lib/supabase';
+import { useRouter, usePathname } from 'next/navigation';
+import { useAuthStore } from '@/src/store/auth.store';
+import { Loader2 } from 'lucide-react';
+import { useQueryClient } from '@tanstack/react-query';
 
 export default function AuthProvider({ children }: { children: React.ReactNode }) {
   const { setUser, setIsLoading, isLoading, user } = useAuthStore();
   const router = useRouter();
   const pathname = usePathname();
   const [isMounting, setIsMounting] = useState(true);
+  const queryClient = useQueryClient();
 
   useEffect(() => {
     const checkUser = async () => {
       try {
-        const { data: { session } } = await supabase.auth.getSession();
+        const {
+          data: { session },
+        } = await supabase.auth.getSession();
         setUser(session?.user ?? null);
       } catch (error) {
-        console.error("Error checking session:", error);
+        console.error('Error checking session:', error);
         setUser(null);
       } finally {
         setIsLoading(false);
@@ -28,29 +32,35 @@ export default function AuthProvider({ children }: { children: React.ReactNode }
 
     checkUser();
 
-    const { data: { subscription } } = supabase.auth.onAuthStateChange((_event, session) => {
+    const {
+      data: { subscription },
+    } = supabase.auth.onAuthStateChange((event, session) => {
       setUser(session?.user ?? null);
       setIsLoading(false);
+
+      if (event === 'SIGNED_IN') {
+        queryClient.invalidateQueries();
+      }
     });
 
     return () => {
       subscription.unsubscribe();
     };
-  }, [setUser, setIsLoading]);
+  }, [setUser, setIsLoading, queryClient]);
 
   useEffect(() => {
     if (isMounting || isLoading) return;
 
-    const isLoginPage = pathname === "/login";
-    
+    const isLoginPage = pathname === '/login';
+
     if (!user && !isLoginPage) {
-      router.replace("/login");
+      router.replace('/login');
     } else if (user && isLoginPage) {
-      router.replace("/");
+      router.replace('/');
     }
   }, [user, isLoading, pathname, router, isMounting]);
 
-  if (isMounting || (isLoading && pathname !== "/login")) {
+  if (isMounting || (isLoading && pathname !== '/login')) {
     return (
       <div className="min-h-screen flex items-center justify-center bg-[#0a0a0a]">
         <div className="flex flex-col items-center gap-4">
